@@ -97,10 +97,31 @@ def iterative_improvement_solve(domains, max_steps=100):
         1. initialize all the variables randomly,
         2. then change the conficting values until solved, use max_steps to avoid infinite loops
     """
-    "*** YOUR CODE HERE ***"
-    
-    "*** YOUR CODE ENDS HERE ***" 
-    print("solved")
+    # Initialize all variables randomly
+    for i in range(len(COLORED_STATES)):
+        COLORED_STATES[i] = random.choice([i for i in range(N_COLORS)])
+    colorize_map()
+
+    for _ in range(max_steps):
+        # Check if the current assignment is consistent
+        if utils.is_solved(GRAPH, COLORED_STATES):
+            print("solved")
+            colorize_map(True)
+            return
+
+        # Find a conflicting variable randomly
+        conflicting_var = utils.random_choose_conflicted_var(GRAPH, COLORED_STATES)
+        if conflicting_var is None:
+            print("solved")
+            colorize_map(True)
+            return
+
+        # Choose a new value for the conflicting variable using the LCV heuristic
+        new_value = utils.get_chosen_value(GRAPH, COLORED_STATES, domains, conflicting_var)
+        COLORED_STATES[conflicting_var] = new_value
+        colorize_map()
+
+    print("Maximum number of steps reached without finding a solution.")
     colorize_map(True)
             
             
