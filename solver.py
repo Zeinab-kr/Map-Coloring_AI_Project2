@@ -55,8 +55,38 @@ def backtrack_solve(domains):
         print(f"backtrack count: {BACKTRACK_COUNT}")
         colorize_map(True)
         exit(0)
-      
-    "*** YOUR CODE HERE ***"     
+
+    if not utils.is_consistent(GRAPH, COLORED_STATES):
+        return
+
+    if USE_VARIABLE_ORDERING:
+        current_variable = utils.get_chosen_variable(GRAPH, COLORED_STATES, domains)
+    else:
+        current_variable = utils.get_next_variable(COLORED_STATES, domains)
+
+    if USE_VALUE_ORDERING:
+        current_domain = utils.get_ordered_domain(GRAPH, domains, current_variable)
+    else:
+        current_domain = domains[current_variable]
+
+    import copy
+
+    for value in current_domain:
+        domains_tmp = copy.deepcopy(domains)
+        COLORED_STATES[current_variable] = value
+        colorize_map()
+        if FILTERING_MODE == "-n":
+            backtrack_solve(domains_tmp)
+        elif FILTERING_MODE == "-fc":
+            if not utils.forward_check(GRAPH, COLORED_STATES, domains_tmp, current_variable, value):
+                backtrack_solve(domains_tmp)
+        elif FILTERING_MODE == "-ac":
+            if not utils.ac3(GRAPH, COLORED_STATES, domains_tmp):
+                backtrack_solve(domains_tmp)
+
+        COLORED_STATES[current_variable] = None
+        colorize_map()
+        BACKTRACK_COUNT += 1    
     
 
 '''ITERATIVE IMPROVEMENT SOLVER'''
