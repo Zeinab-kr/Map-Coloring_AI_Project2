@@ -10,7 +10,12 @@ def is_consistent(graph, variable_value_pairs):
                     variable_value_pairs.keys() to get all the variables,         
                 and variable_value_pairs.values() to get all the values
     """
-    "*** YOUR CODE HERE ***"
+    for state in variable_value_pairs.keys():
+        if variable_value_pairs[state] is not None:
+            for neighbor in graph[state]:
+                if variable_value_pairs[neighbor] == variable_value_pairs[state]:
+                    return False
+    return True
     
 
 def is_solved(graph, variable_value_pairs):
