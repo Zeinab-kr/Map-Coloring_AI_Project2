@@ -22,7 +22,10 @@ def is_solved(graph, variable_value_pairs):
     """
         returns True if the CSP is solved, and False otherwise
     """
-    "*** YOUR CODE HERE ***"
+    for value in variable_value_pairs.values():
+        if value is None:
+            return False
+    return is_consistent(graph, variable_value_pairs)
     
 
 def get_next_variable(variable_value_pairs, domains):
