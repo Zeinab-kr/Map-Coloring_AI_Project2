@@ -32,7 +32,10 @@ def get_next_variable(variable_value_pairs, domains):
     """
         returns the index of the next variable from the default order of the unassinged variables
     """
-    "*** YOUR CODE HERE ***"
+    for i in range(len(domains)):
+        if variable_value_pairs[i] is None:
+            return i
+    return None
     
 
 def get_chosen_variable(graph, variable_value_pairs, domains):
