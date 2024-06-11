@@ -43,8 +43,32 @@ def get_chosen_variable(graph, variable_value_pairs, domains):
         returns the next variable that is deemed the best choice by the proper heuristic
         use a second heuristic for breaking ties from the first heuristic
     """
-    "*** YOUR CODE HERE ***"
     "MRV & degree heuristic"
+    mrv_variables = [var for var in range(len(domains)) if variable_value_pairs[var] is None]
+    if not mrv_variables:
+        return None
+
+    min_domain_size = min(len(domains[var]) for var in mrv_variables)
+    mrv_candidates = [var for var in mrv_variables if len(domains[var]) == min_domain_size]
+
+    # Degree heuristic to break ties
+    max_degree = 0
+    best_variable = None
+    for var in mrv_candidates:
+        degree = len(graph[var])
+        if degree > max_degree:
+            max_degree = degree
+            best_variable = var
+
+    if best_variable is None:
+        if len(mrv_candidates) > 1:
+            lcv_candidates = sorted(mrv_candidates, key=lambda var: sum(
+                1 for neighbor in graph[var] if variable_value_pairs.get(neighbor) is None))
+            return lcv_candidates[0]
+        else:
+            return random.choice(mrv_candidates)
+
+    return best_variable
     
     
 def get_ordered_domain(graph, domains, variable):
